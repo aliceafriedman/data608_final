@@ -1,6 +1,7 @@
 //References:
 // 'Data Visualization with D3 by Michael Menz' https://www.youtube.com/watch?v=219xXJRh4Lw&t=2132s
 // 'categorical colors' by Ariel Aizemberg http://bl.ocks.org/aaizemberg/78bd3dade9593896a59d
+// 'Making a Bar Chart with D3.js and SVG [Reloaded]' by Curran Kelleher https://www.youtube.com/watch?v=NlBt-7PuaLk
 
 // SETUP
 
@@ -14,12 +15,22 @@ function color_range(n) {
 // LAYOUT
 d3.select("#map").style("background-color", "AliceBlue")
 
+
+
+
 // DATA
 const url = 'https://data.cityofnewyork.us/resource/sv2w-rv3k.csv';
+// const filename = '/docs/scratch/NYPD_Criminal_Court_Summons__Historic_.csv'
 
-d3.csv(url, function(data){
+d3.csv(url, function(data){ //load from web
+
+    // d3.csv(filename, function(data){ //load from file
+    // console.log("message: loading from file")
 
     console.log(data);
+
+    //sort alphabetically by offense_description
+    data.sort(function (a,b) {return d3.ascending(a.offense_description, b.offense_description);});
 
     // creates a variable "summons" with a 'g' tag wiht location for each summons given
     var summons = d3.select("#map")
@@ -30,7 +41,7 @@ d3.csv(url, function(data){
             .attr("class", "summons")
             .attr("transform", function(d) {
                 return "translate(" + 
-                (d.x_coordinate_cd/400 - 2200) +
+                (d.x_coordinate_cd/400 - 2250) +
                 "," +
                 (-d.y_coordinate_cd/400 + 700) +
                 ")";
@@ -73,7 +84,7 @@ d3.csv(url, function(data){
 
     selector
         .selectAll("option")
-        .data(offenses)
+        .data(offenses) 
         .enter()
         .append("option")
             .text(function(d){return d.key;})
@@ -102,29 +113,8 @@ d3.csv(url, function(data){
             }
 
         });
-    // var body = d3.select("body");
 
-    // body
-    //     .selectAll("p")
-    //     .data(data)
-    //     .enter()
-    //     .append("p")
-    //         .text(function (d) {return d.summons_date;
-    //     });
-
-    //MAPPING
-
-    // var svg = d3.select("#map").attr("width", 1280).attr("height", 400);
-
-    // var projection = d3.geo.albersUsa();
-
-    // svg    
-    //     .append("circle")
-    //     .attr("r",5)
-    //     .attr("transform"
-    //     , function() {
-    //         return "translate(" + projection([-75,43]) + ")";
-    //     });
+    
 
 // END DATA FUNCTION
 });
