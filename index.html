@@ -4,25 +4,31 @@
         <title>AFriedman Final Project, DATA608</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script id="csvPath" type="text/javascript">
+            const csvPath = '/docs/scratch/mini_df.csv';
+        </script>
     </head>
 <body>
 
+    hey
+
     <div class="container-fluid">
-        
+        <!-- Select -->
         <div class="row">
             <div class="col-md-6">
                 <select id="selector"></select>
             </div> 
         </div>
-    
+
+        <!-- Row containing viz -->
         <div class="row">
-            <div class="col-md-6"><svg id="map" height="500px" width="500px"></svg></div>
-            <div id="test" class="col-md-6" ></div><svg id="graph" height="500px" width="500px"></svg></div>
+            <div class="col-md-6"><svg id="map" height="500" width="500"></svg></div>
+            <div id="test" class="col-md-6" ><svg id="graph" height="500" width="500"></svg></div>
         </div>
     
     </div>
 
-
-<script src="js/test.js"></script>
+<!-- My js implementation -->
+<script src="/js/test.js"></script>
 </body>
 </html>
