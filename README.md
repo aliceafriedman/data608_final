@@ -1,0 +1,1 @@
+This barchart shows criminal summons issued by NYPD in the year 2019. Data is from [NYC Open Data](https://data.cityofnewyork.us/Public-Safety/NYPD-Criminal-Court-Summons-Historic-/sv2w-rv3k)

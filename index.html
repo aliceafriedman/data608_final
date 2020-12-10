@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>AFriedman Final Project, DATA608</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script src="https://d3js.org/d3.v4.min.js"></script>
-        <script id="csvPath" type="text/javascript">
-            const csvPath = '/docs/scratch/mini_df.csv';
-        </script>
+        <title>NYPD Summonses for Marijuana</title>
+        <!-- d3 -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
+        <script type="text/javascript">const filepath = "/summons_mj.geojson";</script>
+
+
+        <style>
+            body {
+                position: absolute;
+                font-family: "Proxima Nova", "Montserrat", sans-serif;
+            }
+            h1, h2 {
+                position: absolute;
+                left: 10px;
+                font-size: 1.3em;
+                font-weight: 100;
+            }
+            h2 {
+                top: 30px;
+                font-size: 1em;
+            }
+            /* .precint:hover {
+                fill:red;
+            }  */
+            .summons:hover {
+                fill:yellow;
+            }
+
+        </style>
     </head>
 <body>
-
-    hey
-
-    <div class="container-fluid">
-        <!-- Select -->
-        <div class="row">
-            <div class="col-md-6">
-                <select id="selector"></select>
-            </div> 
-        </div>
-
-        <!-- Row containing viz -->
-        <div class="row">
-            <div class="col-md-6"><svg id="map" height="500" width="500"></svg></div>
-            <div id="test" class="col-md-6" ><svg id="graph" height="500" width="500"></svg></div>
-        </div>
-    
-    </div>
-
-<!-- My js implementation -->
-<script src="/js/test.js"></script>
+    <h1>Marijuana Summonses in NYC, 2019</h1>
+    <h2 id="anno-text">
+    </h2>
+    <svg width=600 height=800></svg>
+    <script src="test.js"></script>
 </body>
 </html>
