@@ -29,6 +29,29 @@ Promise.all([
     d3.json(filepath) //link to processed summons data
 ]).then(([precintData, summonsData]) => {
 
+    var summons = summonsData.features;
+
+    //sort by year
+    summons.sort(function (a,b) {return d3.ascending(a.properties.YEAR, b.properties.YEAR);});
+
+    var years = d3.nest()
+        .key(function(d){return d.properties.YEAR; })
+        .rollup(function(a){return a.length;})
+        .entries(summons);
+
+
+    var selector = d3.select("#selector");
+
+    selector
+        .selectAll("option")
+        .data(years) 
+        .enter()
+        .append("option")
+            .text(function(d){return d.key;})
+            .attr("value", function(d){
+                return d.key;
+            });
+
     console.log(summonsData);
 
 
@@ -43,15 +66,42 @@ Promise.all([
         .attr('d', geoPath)
     .append("title").text("hello");
 
-    svg.append( "g" ).attr("id", "summons-dots")
+    svg.append( "g" ).attr("id", "summons-map")
         .selectAll('path')
-        .data(summonsData.features).enter()
+        .data(summons)
+        .enter()
         .append('path')
-            .attr("class", "summons")
-            .attr( "stroke", "#999" )
-            // .attr("opacity", 1)
-            .attr( "fill", "#999")
-            .attr( "d", geoPath );
+            .attr("class", "summons-dots")
+            // .attr("opacity", .1)
+            .attr( "d", geoPath )
+            .attr("fill", function(d) {
+                if(d.properties.cat == 'commercial'){
+                    return "yellow";
+                } else{
+                    return "steelblue";
+                }
+            });
+
+    selector.on("change", function(){
+        var value = selector.property("value");
+        console.log(value);
+
+        d3.selectAll('.summons-dots')
+            .filter(function(d){
+                
+                return d.properties.YEAR != value;
+            })
+            .attr("opacity", 0);
+
+        d3.selectAll('.summons-dots')
+            .filter(function(d){
+                
+                return d.properties.YEAR == value;
+            })
+            .attr("opacity", 1);
+        
+
+    });
     // add annotation on mouseover
     // .on("mouseover", function(d){
     //     d3.select("#anno-text").text(
@@ -62,7 +112,6 @@ Promise.all([
 	// 	d3.select("#anno-text").text("");
     // });
 
-    var 
 
     
 
