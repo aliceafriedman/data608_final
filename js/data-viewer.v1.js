@@ -123,7 +123,6 @@ Promise.all([
     });
 
 
-
 }); //end then
 
 
@@ -146,5 +145,6 @@ svg.append("text")
     .attr("alignment-baseline","middle")
 
 
-
 console.log("done");
+
+// alice a friedman
