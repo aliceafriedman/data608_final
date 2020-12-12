@@ -16,10 +16,21 @@ var projection = d3.geoAlbers()
     
 const geoPath = d3.geoPath().projection(projection);
 
+//timeslider functions adapted from http://duspviz.mit.edu/d3-workshop/mapping-data-with-d3/
+var inputValue = null;
+var month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+
+
+
+//load data and set up map
 Promise.all([
-    d3.json('https://opendata.arcgis.com/datasets/c35786feb0ac4d1b964f41f874f151c1_0.geojson'),
-    d3.json(filepath)
+    d3.json('https://opendata.arcgis.com/datasets/c35786feb0ac4d1b964f41f874f151c1_0.geojson'), //basemap
+    d3.json(filepath) //link to processed summons data
 ]).then(([precintData, summonsData]) => {
+
+    console.log(summonsData);
+
 
     svg.append("g").attr("id", "precinct-map")
     .selectAll('path')
@@ -37,21 +48,31 @@ Promise.all([
         .data(summonsData.features).enter()
         .append('path')
             .attr("class", "summons")
-            .attr( "fill", "#900" )
             .attr( "stroke", "#999" )
-            .attr( "d", geoPath )
+            // .attr("opacity", 1)
+            .attr( "fill", "#999")
+            .attr( "d", geoPath );
     // add annotation on mouseover
-    .on("mouseover", function(d){
-        d3.select("#anno-text").text(
-            `Race of Sumonsee: ${d.properties.RACE}`
-            );
-    })
-    .on("mouseout", function(d){
-		d3.select("#anno-text").text("");
-	});
+    // .on("mouseover", function(d){
+    //     d3.select("#anno-text").text(
+    //         `Age: ${d.properties.RACE}, Race: ${d.properties.RACE}, Gender: ${d.properties.SEX}`
+    //         );
+    // })
+    // .on("mouseout", function(d){
+	// 	d3.select("#anno-text").text("");
+    // });
 
-    console.log(summonsData);
+    var 
+
+    
+
+
 
 });
+
+
+
+
+
 
 console.log("done");

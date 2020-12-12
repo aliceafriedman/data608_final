@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>NYPD Summonses for Marijuana</title>
+        <title>NYPD Cycling Summons</title>
         <!-- d3 -->
         <script src="https://d3js.org/d3.v5.min.js"></script>
+        <!-- topojson -->
         <script src="https://unpkg.com/topojson@3.0.2/dist/topojson.min.js"></script>
-        <script type="text/javascript">const filepath = "/summons_mj.geojson";</script>
-
-
+        <!-- link to data -->
+        <script type="text/javascript">const filepath = "data/bike_summons_data2019.geojson";</script>
+        <!-- styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <style>
             body {
                 position: absolute;
@@ -23,20 +25,20 @@
                 top: 30px;
                 font-size: 1em;
             }
-            /* .precint:hover {
-                fill:red;
-            }  */
-            .summons:hover {
-                fill:yellow;
-            }
+
+
 
         </style>
     </head>
 <body>
-    <h1>Marijuana Summonses in NYC, 2019</h1>
-    <h2 id="anno-text">
-    </h2>
-    <svg width=600 height=800></svg>
-    <script src="test.js"></script>
+    <div class="container-fluid">
+        <div class="row"><h1>Marijuana Summonses in NYC, 2019</h1></div>
+        <!-- <div class="row"><h2 id="anno-text">Hover for Summons Details</h2></div> -->
+        
+        <div class="row"><svg width=600 height=800></svg></div>
+
+    </div>
+
+    <script src="/js/data-viewer.v1.js"></script>
 </body>
 </html>
