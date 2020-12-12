@@ -171,17 +171,6 @@ Promise.all([
 
     });
 
-    //rollup by year
-    var years = d3.nest()
-        .key(function(d){return d.properties.; })
-        .rollup(function(a){return a.length;})
-        .entries(summons);
-
-    //add "all" to top of list    
-    years.unshift({
-        "key": "All",
-        "value": true
-        });
 
 }); //end then
 
@@ -208,6 +197,8 @@ svg.append("text")
 
 console.log("done");
 
-    </script>
+    // end script
+    </script> 
+<!-- end body -->
 </body>
 </html>
