@@ -18,6 +18,10 @@
                 border:0px;
                 outline:0px;
             }
+/* 
+            .precinct:hover{
+                fill:red;
+            } */
 
         </style>
     </head>
@@ -31,16 +35,27 @@
 
         <!-- Select -->
         <div class="row">
-            Select Year: <select id="selector"></select>
-        </div>         
+            <p>Select Year: <select id="selector"></select></p>
+        </div> 
+
+
         <div class="row">
+        
+            <!-- Map -->
+            <div class="col-xs-6">
+                <svg width=800 height=600></svg>
+            </div>
             
-            <svg width=800 height=600></svg>
-        </div>  
-        <!-- <div class="row"><h2 id="anno-text">Hover for Summons Details</h2></div> -->
-        <div class="row">
-            
-        </div>
+            <!-- Text Write Up-->
+            <div class="col-xs-6">
+                <h2>About</h2>
+                <p>
+
+                </p>
+            </div>
+        
+        </div> 
+        
 
 
     </div>
@@ -71,24 +86,29 @@ const geoPath = d3.geoPath().projection(projection);
 Promise.all([
     d3.json('https://opendata.arcgis.com/datasets/c35786feb0ac4d1b964f41f874f151c1_0.geojson'), //basemap
     d3.json(filepath) //link to processed summons data
-]).then(([precintData, summonsData]) => {
+]).then(([precinctData, summonsData]) => {
 
-    //draw basemap
+    console.log(precinctData);
 
+    //redraw precinct basemap to show title
     svg.append("g").attr("id", "precinct-map")
     .selectAll('path')
-    .data(precintData.features)
+    .data(precinctData.features)
     .enter()
     .append('path')
-        .attr("class", "precint")
-        .attr( "fill", "#ccc" )
-        .attr( "stroke", "#333")
-        .attr('d', geoPath);
+        // .attr("class", "precinct")
+        .attr( "opacity", 0.1)
+        .attr( "stroke", "lightgray")
+        .attr('d', geoPath)
+
 
     //create var for summons data & sort by year
     var summons = summonsData.features;
     summons.sort(function (a,b) {return d3.ascending(a.properties.YEAR, b.properties.YEAR);});
     console.log(summons);
+
+
+  
 
     //rollup by year
     var years = d3.nest()
@@ -171,6 +191,21 @@ Promise.all([
 
     });
 
+    //redraw precinct basemap to show title
+    svg.append("g").attr("id", "hidden-precinct-map")
+    .selectAll('path')
+    .data(precinctData.features)
+    .enter()
+    .append('path')
+        // .attr("class", "precinct")
+        .attr( "opacity", 0)
+        .attr( "stroke", "none")
+        .attr('d', geoPath)
+    .append('title')
+        .text(function(d){
+            return `Precinct Number: ${d.properties.Precinct}`;
+        });
+
 
 }); //end then
 
@@ -181,7 +216,7 @@ svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 6).style("fill", "yel
 svg.append("text")
     .attr("x", 30)
     .attr("y", 30)
-    .text("Non-Commercial Cycling Infractions")
+    .text("Commercial Cycling Infractions")
     .style("font-size", "15px")
     .attr("alignment-baseline","middle")
 
@@ -189,7 +224,7 @@ svg.append("circle").attr("cx",10).attr("cy",60).attr("r", 6).style("fill", "ste
 svg.append("text")
     .attr("x", 30)
     .attr("y", 60)
-    .text("Commercial Cycling Infractions")
+    .text("Non-Commercial Cycling Infractions")
     .style("font-size", "15px")
     .attr("alignment-baseline","middle")
 
