@@ -7,7 +7,7 @@
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <!-- link to data -->
         <script type="text/javascript">
-            const filepath = "data/cat_by_year.csv";
+            const filepath = "../data/cat_by_year.csv";
         </script>
         <!-- styles -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -30,7 +30,7 @@
             
             <!-- Links -->
             <div class ="row">
-                <p><a href="/about.html">About</a> | <a href="/index.html">Map</a> | <a href="/chart.html">Chart</a></p>
+                <p><a href="/about.html">About</a> | <a href="/index.html">Map</a> | <a href="./chart/">Chart</a></p>
             </div>
         
             
@@ -54,11 +54,6 @@
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
-
-// define the line var
-var valueline = d3.line()
-    .x(d =>d.YEAR)
-    .y(d =>d.n);
 
 
 // appends a 'group' element to 'svg' & moves the 'group' element to the top left margin
