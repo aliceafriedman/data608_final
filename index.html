@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Map of Cycling Summons, NYC</title>
+        <!-- d3 -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <!-- link to data -->
+        <script type="text/javascript">
+            const filepath = "data/bike.summons.2009_2019.geojson";
+            const filepath2 = "data/cat_by_year.csv";
+        </script>
+        <!-- styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            body {
+                font-family: "Proxima Nova", "Montserrat", sans-serif;
+                padding: 40px;
+            }
+
+            select#selector {
+                border:0px;
+                outline:0px;
+            }
+/* 
+            .precinct:hover{
+                fill:red;
+            } */
+
+        </style>
+    </head>
+<body>
+    <div class="container-fluid">
+        <!-- Links -->
+        <div class ="row">
+            <p><a href="/about.html">About</a> | <a href="/index.html">Map</a> | <a href="/chart.html">Chart</a></p>
+        </div>
+        
+        <!-- Title -->
+        <div class="row">
+            <h1>NYC Cycling Summons, <span id="title_year">2006-2019</span></h1>
+        </div>
+
+        <!-- Select -->
+        <div class="row">
+            <p>Select Year: <select id="selector"></select></p>
+        </div> 
+
+        <!-- Content -->
+        <div class="row">
+            <svg id="map" width=800 height=600></svg>            
+        </div> 
+        
+
+
+    </div>
+
+    <script type="text/javascript"> 
+    
+    // Referenes: 
+    // ArcGIS Hub, NYPD Precincts GeoJSON https://hub.arcgis.com/datasets/DCP::nyc-police-precincts/data
+    // NYC Historical Summons Data, https://data.cityofnewyork.us/Public-Safety/NYPD-Criminal-Court-Summons-Historic-/sv2w-rv3k
+    // Mapping Data with D3, MIT DUSP | Mike Foster http://duspviz.mit.edu/d3-workshop/mapping-data-with-d3/
+    // Legend tutorial: https://www.d3-graph-gallery.com/graph/custom_legend.html
+
+const svg = d3.select('#map');
+
+
+const width = +svg.attr("width");
+const height = +svg.attr("height");
+
+var projection = d3.geoAlbers()
+    .scale( 75000 )
+    .rotate( [73.935242,0] )
+    .center( [0, 40.7] )
+    .translate( [width/2,height/2] );
+    
+const geoPath = d3.geoPath().projection(projection);
+
+const cats = ['sidewalk', 'commercial', 'park', 'equipment', 'other'];
+const colors = ['steelblue','yellow', 'lightgreen', 'pink', 'gray']
+
+//load data and set up map
+Promise.all([
+    d3.json('https://opendata.arcgis.com/datasets/c35786feb0ac4d1b964f41f874f151c1_0.geojson'), //basemap
+    d3.json(filepath) //link to processed summons geodata
+ 
+]).then(([precinctData, summonsData]) => {
+
+    console.log(precinctData);
+
+    //redraw precinct basemap to show title
+    svg.append("g").attr("id", "precinct-map")
+    .selectAll('path')
+    .data(precinctData.features)
+    .enter()
+    .append('path')
+        // .attr("class", "precinct")
+        .attr( "opacity", 0.1)
+        .attr( "stroke", "lightgray")
+        .attr('d', geoPath)
+
+
+    //create var for summons data & sort by year
+    var summons = summonsData.features;
+    summons.sort(function (a,b) {return d3.ascending(a.properties.YEAR, b.properties.YEAR);});
+    console.log(summons);
+
+    //rollup by year
+    var years = d3.nest()
+        .key(function(d){return d.properties.YEAR; })
+        .rollup(function(a){return a.length;})
+        .entries(summons);
+
+    //add "all" to top of list    
+    years.unshift({
+        "key": "All",
+        "value": true
+    });
+
+    // create options in selector based on years
+    var selector = d3.select("#selector");
+
+    selector
+        .selectAll("option")
+        .data(years) 
+        .enter()
+        .append("option")
+            .text(function(d){return d.key;})
+            .attr("value", function(d){
+                return d.key;
+            });
+
+    // create seperate 'g' for each year, which will make processing faster (i think?)
+    //will also draw more recent years on top of older years
+
+    for (let year of years) {
+
+        svg.append( "g" )
+        .attr("id", `year${year.key}`)
+        .attr("opacity", .25) //initial state
+        .attr("class", "data_years")
+        .selectAll('path')
+        .data(summons. filter(function(d){
+            return d.properties.YEAR == year.key;
+        }))
+        .enter()
+        .append('path')
+            // .attr("class", "summons-dots")
+            .attr( "d", geoPath )
+            .attr("fill", function(d) {
+                for (let i = 0; i < cats.length; i++){
+                    if (d.properties.cat == cats[i]){
+                        return colors[i];
+                    }
+
+                }
+                            });
+
+    } // end for
+
+
+    // turn on and off layers based on selection
+    selector.on("change", function(){
+        var value = selector.property("value");
+
+        if (value=='All'){
+
+            d3.selectAll('.data_years')
+                .attr("visibility", "visible")
+                // .attr("opacity", 0.25);
+            
+                d3.select('h1')
+                .text('NYC Cycling Summons: 2006-2019'); //update title
+        } else {
+            
+            d3.selectAll('.data_years')
+                .attr("visibility", "hidden"); //hide all the data years
+            
+            d3.select(`#year${value}`)
+                .attr("visibility", "visible") //unhide the one data year
+                .attr("opacity", .5); 
+            
+                d3.select('h1')
+                .text(`NYC Cycling Summons, ${value}`); //update title
+
+        }  
+
+    });
+
+    //redraw precinct basemap to show title
+    svg.append("g").attr("id", "hidden-precinct-map")
+    .selectAll('path')
+    .data(precinctData.features)
+    .enter()
+    .append('path')
+        // .attr("class", "precinct")
+        .attr( "opacity", 0)
+        .attr( "stroke", "none")
+        .attr('d', geoPath)
+    .append('title')
+        .text(function(d){
+            return `Precinct Number: ${d.properties.Precinct}`;
+        });
+
+
+}); //end then
+
+
+// add legend based on colors used previously
+svg.append("text")
+    .attr("x", 0)
+    .attr("y", 30)
+    .style("font-size", "15px")
+    .attr("alignment-baseline","middle")
+    .text("Summons Group (Most Commonly Cited Admin. Code)");
+
+var cy = 60;
+
+    var labels = [
+    "Biking on Sidewalk (19.176)",
+    "Commercial Cycling Infractions (10.157)",
+    "Biking in Park (1-05i)",
+    "Equipment (1236 or 1238)",
+    "Other or Unknown (varies)"
+]
+ 
+for (let i = 0; i<cats.length; i++){
+    svg.append("circle")
+        .attr("cx",10)
+        .attr("cy", cy)
+        .attr("r", 6)
+        .attr("opacity", .5) 
+        .style("fill", [colors[i]]);
+    
+        svg.append("text")
+            .attr("x", 30)
+            .attr("y", cy)
+            .text(labels[i])
+            .style("font-size", "15px")
+            .attr("alignment-baseline","middle")
+
+        cy += 30; 
+
+}
+
+
+
+    // end script
+    </script> 
+<!-- end body -->
+</body>
+</html>

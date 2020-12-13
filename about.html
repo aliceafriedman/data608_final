@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>NYC Cycling Summons Data, Time Series</title>
+        
+        <!-- d3 -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <!-- link to data -->
+        <script type="text/javascript">
+            const filepath = "data/cat_by_year.csv";
+        </script>
+        <!-- styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            body {
+                font-family: "Proxima Nova", "Montserrat", sans-serif;
+                padding: 40px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            <!-- Links -->
+            <div class ="row">
+                <p><a href="about.html">About</a> | <a href="index.html">Map</a> | <a href="chart.html">Chart</a></p>
+            </div>
+            
+            <!-- Title -->
+            <div class="row">
+                <h1>NYC Cycling Summons, <span id="title_year">2006-2019</span></h1>
+             </div>
+             <!-- Content -->
+             <div class="row">
+                  <!-- Text Write Up-->
+            
+                  <h2>About</h3>
+                    <p>
+                        This visualization was created as a final project for 
+                        CUNY School of Professional Studies DATA 608, Data Visualization. 
+                        Data acquisition and exploratory data analysis can be reviewed 
+                        <a href="https://github.com/aliceafriedman/data608_final/blob/gh-pages/docs/data_acquisition_cleaning_bicycle_summons.ipynb" target="blank">
+                            here</a>.
+                    </p>
+                    <p>
+                        Summons are coded as "Commercial" or "Non-Commercial."
+                        Each dot on the map represents one criminal summons issued to one person in the year or 
+                        during the years selected, in the category shown. 
+                        The background map shows the outline of NYC 2020 made up of NYPD precinct boundaries. 
+                        Hovering over a precinct will show the precinct number as a title.
+                    </p>
+                    <h4>
+                        Data Sources
+                    </h4>
+                    <p>
+                        <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-* * Criminal-Court-Summons-Historic-/sv2w-rv3k" target="blank">NYC Historical Summons Data</a> 
+                        was downloaded from NYC Open Data. After cleaning and transformation into GeoJSON format, this data is loaded to this page from the local host. The data include criminal summons given from 2006 to 2019 in all five boroughs in NYC. This subset of the entire dataset includes all summonses listed with summons category as "BIKE" as well as any summonses listed with the words "BIKE" or "BICYCLE" in the 'Offense Description' field. Limitations of the data include apparent data coding errors, such as a summons category listed as "Alcohol" and a law section citing alcohol, which raises the question of whether someone was stopped for a bicycle-related infraction or just was riding a bike (or neither). All data included, have, at minimum, a summons key and one of a either a category type or offense description.
+                    </p>
+                    <p>
+                        <a href="https://data.cityofnewyork.us/Public-Safety/Police-Precincts/78dh-3ptz"  target="blank">NYPD precinct boundaries</a> show the 77 police precincts in NYC, and are also drawn from GeoJSON data available from 
+                        NYC Open Data
+                        , and are drawn directly from that website. These data show static boundaries as of 2020, and notably do no account for changes in boundary lines such as the addition of a 4th Staten Island precinct in 2013.
+                    </p>
+                    <h4>Conclusions</h4>
+                    <p>This analysis shows that criminal summonses have decreased dramatically over time, and are currently concentrated in just a few precincts. 
+                        This matters for policy makers and advocates interested in decriminalizing low-level offenses, such as biking on a sidewalk, who may be able to focus their efforts on just a few precincts to make major changes. 
+                        The data also show, interestingly, that summonses given vary  significantly  by precinct and year, demonstrating that changes in policy at the local level can have major impacts in terms of criminal justice.
+                    </p>
+             </div>
+
+        </div>
+    </body>
+    </html>

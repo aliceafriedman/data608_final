@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>NYC Cycling Summons Data, Time Series</title>
+        
+        <!-- d3 -->
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <!-- link to data -->
+        <script type="text/javascript">
+            const filepath = "data/cat_by_year.csv";
+        </script>
+        <!-- styles -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            body {
+                font-family: "Proxima Nova", "Montserrat", sans-serif;
+                padding: 40px;
+            }
+
+            .line {
+                fill: none;
+                stroke: steelblue;
+                stroke-width: 2px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+            
+            <!-- Links -->
+            <div class ="row">
+                <p><a href="about.html">About</a> | <a href="index.html">Map</a> | <a href="chart.html">Chart</a></p>
+            </div>
+        
+            
+            <!-- Title -->
+            <div class="row">
+                <h1>NYC Cycling Summons, <span id="title_year">2006-2019</span></h1>
+             </div>
+
+             <!-- Chart -->
+             <div class="row">
+                <svg id="chart"></svg>
+             </div>
+
+        </div>
+
+<script type="text/javascript">
+// References
+// 'Multiple line graph in v5' by d3noob https://bl.ocks.org/d3noob/daecba427fed7c2d912d8abbe9f3e784
+// https://stackoverflow.com/questions/48698670/formatting-year-in-d3-v4-to-remove-commas
+
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// define the line var
+var valueline = d3.line()
+    .x(d =>d.YEAR)
+    .y(d =>d.n);
+
+
+// appends a 'group' element to 'svg' & moves the 'group' element to the top left margin
+var svg = d3.select("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+//define categories and colors
+const cats = ['sidewalk', 'commercial', 'park', 'equipment', 'other']; //this is from the data
+const colors = ['steelblue', 'yellow', 'lightgreen', 'pink', 'gray']
+
+var parseTime = d3.timeParse("%Y");
+
+// load data then draw
+d3.csv(filepath) // summary table for chart
+    .then(data => {
+
+        data.forEach(function(d) {
+            d.YEAR = parseTime(d.YEAR);
+            d.n = +d.n;
+        });
+
+        // create scale based on domain and range of data
+        var x = d3.scaleTime()
+            .range([0, width])
+            .domain(d3.extent(data, function(d) { return d.YEAR; }));
+        var y = d3.scaleLinear()
+        .range([height, 0])
+        .domain([0, d3.max(data, function(d) {
+            return Math.max(d.n); 
+        })]);
+
+        // Add each line path by looping through the groups, defined in the cats variable
+        for (let i = 0; i < cats.length; i++){
+
+            svg.append('g')
+                .append("path")
+                .datum(data.filter(function(d){return d.cat==cats[i]}))
+                .attr("d", d3.line()
+                    .x(function(d) { return x(d.YEAR) })
+                    .y(function(d) { return y(+d.n) })
+                )
+                .attr("stroke", colors[i])
+                .attr("opacity", .5)
+                .style("stroke-width", 4)
+                .style("fill", "none");
+
+
+    };
+
+    // Add x axis
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+    // Add y axis
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    }); // End of then
+
+// add legend based on colors used previously
+var cx = 550;
+var cy = 60;
+
+svg.append("text")
+    .attr("x", cx)
+    .attr("y", cy - 30)
+    .style("font-size", "15px")
+    .attr("alignment-baseline","middle")
+    .text("Summons Group (Most Commonly Cited Admin. Code)");
+
+
+
+    var labels = [
+    "Biking on Sidewalk (19.176)",
+    "Commercial Cycling Infractions (10.157)",
+    "Biking in Park (1-05i)",
+    "Equipment (1236 or 1238)",
+    "Other or Unknown (varies)"
+]
+ 
+for (let i = 0; i<cats.length; i++){
+    svg.append("circle")
+        .attr("cx",cx + 10)
+        .attr("cy", cy)
+        .attr("r", 6)
+        .attr("opacity", .5) 
+        .style("fill", [colors[i]]);
+    
+        svg.append("text")
+            .attr("x", cx + 30)
+            .attr("y", cy)
+            .text(labels[i])
+            .style("font-size", "15px")
+            .attr("alignment-baseline","middle")
+
+        cy += 30; 
+
+}
+
+
+//End of script
+
+</script> 
+</body>
+</html>
+
+
