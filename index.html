@@ -64,6 +64,8 @@
     // Legend tutorial: https://www.d3-graph-gallery.com/graph/custom_legend.html
 
 const svg = d3.select('#map');
+const defaultYear = "2013";
+
 
 
 const width = +svg.attr("width");
@@ -100,6 +102,9 @@ Promise.all([
         .attr( "opacity", 0.1)
         .attr( "stroke", "lightgray")
         .attr('d', geoPath)
+    
+    selector.dispatch("change");
+
 
 
     //create var for summons data & sort by year
@@ -131,6 +136,9 @@ Promise.all([
             .attr("value", function(d){
                 return d.key;
             });
+
+    //start with 2019
+    selector.property("value", defaultYear);
 
     // create seperate 'g' for each year, which will make processing faster (i think?)
     //will also draw more recent years on top of older years
@@ -176,7 +184,7 @@ Promise.all([
         } else {
             
             d3.selectAll('.data_years')
-                .attr("visibility", "hidden"); //hide all the data years
+                .attr("visibility", "hidden"); //hide all the other data years
             
             d3.select(`#year${value}`)
                 .attr("visibility", "visible") //unhide the one data year
