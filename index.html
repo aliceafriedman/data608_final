@@ -58,6 +58,7 @@
     
     // Referenes: 
     // ArcGIS Hub, NYPD Precincts GeoJSON https://hub.arcgis.com/datasets/DCP::nyc-police-precincts/data
+        // https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/NYC_Police_Precincts/FeatureServer/0/query?where=1=1&outFields=*&outSR=4326&f=pgeojson
     // NYC Historical Summons Data, https://data.cityofnewyork.us/Public-Safety/NYPD-Criminal-Court-Summons-Historic-/sv2w-rv3k
     // Mapping Data with D3, MIT DUSP | Mike Foster http://duspviz.mit.edu/d3-workshop/mapping-data-with-d3/
     // Legend tutorial: https://www.d3-graph-gallery.com/graph/custom_legend.html
@@ -82,7 +83,7 @@ const colors = ['steelblue','yellow', 'lightgreen', 'pink', 'gray']
 //load data and set up map
 Promise.all([
     //d3.json('https://opendata.arcgis.com/datasets/c35786feb0ac4d1b964f41f874f151c1_0.geojson'), //basemap
-    d3.json('https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/NYC_Police_Precincts/FeatureServer/0'), //basemap
+    d3.json('https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/NYC_Police_Precincts/FeatureServer/0/query?where=1=1&outFields=*&outSR=4326&f=pgeojson'), //basemap
     d3.json(filepath) //link to processed summons geodata
  
 ]).then(([precinctData, summonsData]) => {
