@@ -81,7 +81,8 @@ const colors = ['steelblue','yellow', 'lightgreen', 'pink', 'gray']
 
 //load data and set up map
 Promise.all([
-    d3.json('https://opendata.arcgis.com/datasets/c35786feb0ac4d1b964f41f874f151c1_0.geojson'), //basemap
+    //d3.json('https://opendata.arcgis.com/datasets/c35786feb0ac4d1b964f41f874f151c1_0.geojson'), //basemap
+    d3.json('https://services5.arcgis.com/GfwWNkhOj9bNBqoJ/arcgis/rest/services/NYC_Police_Precincts/FeatureServer/0'), //basemap
     d3.json(filepath) //link to processed summons geodata
  
 ]).then(([precinctData, summonsData]) => {
